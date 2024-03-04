@@ -31,12 +31,13 @@ import { Label } from '@/module/label/label.entity';
         return {
           type: 'mysql',
           ...databaseConfig,
-          entities: [
-            Paper,
-            Comment,
-            Reply,
-            Label
-          ],
+          // entities: [
+          //   Paper,
+          //   Comment,
+          //   Reply,
+          //   Label
+          // ],
+          autoLoadEntities: true,
           synchronize: true,
           // logging: true,
         };
