@@ -10,6 +10,13 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths":{
+      "@/module/*": ["src/module/*"],
+      "@/exception/*": ["src/exception/*"],
+      "@/pipe/*": ["src/pipe/*"],
+      "@/interceptor/*": ["src/interceptor/*"],
+      "@/type/*": ["src/type/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
