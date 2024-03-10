@@ -1,6 +1,12 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { createParamProps } from '../../type/paper';
-import { Like, Repository, EntityManager, SelectQueryBuilder, createQueryBuilder } from 'typeorm';
+import {
+  Like,
+  Repository,
+  EntityManager,
+  SelectQueryBuilder,
+  createQueryBuilder,
+} from 'typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { Paper } from './paper.entity';
 import { Label } from '../label/label.entity';
@@ -10,9 +16,7 @@ import { LabelService } from '../label/label.service';
 export class PaperService {
   private paperRepository: Repository<Paper>;
 
-  constructor(@InjectEntityManager() private readonly manager: EntityManager,
-
-  ) {
+  constructor(@InjectEntityManager() private readonly manager: EntityManager) {
     this.paperRepository = this.manager.getRepository(Paper);
   }
 
@@ -20,11 +24,11 @@ export class PaperService {
     const paper = new Paper();
 
     const { labels } = params;
-    const labelList: Label[] = []
+    const labelList: Label[] = [];
     for (const value of labels) {
       const labelInstance = new Label();
       labelInstance.label = value;
-      await labelList.push(labelInstance)
+      await labelList.push(labelInstance);
       await this.manager.save(labelInstance);
     }
 
@@ -39,8 +43,8 @@ export class PaperService {
   async delete(paperId: number) {
     let toDelete = await this.paperRepository.findOne({
       where: {
-        id: paperId
-      }
+        id: paperId,
+      },
     });
     let deleted = false;
     if (toDelete) {
@@ -52,16 +56,16 @@ export class PaperService {
 
   async update(paperId: number, params: createParamProps) {
     let toUpdate = await this.paperRepository.findOneBy({
-      id: paperId
+      id: paperId,
     });
     let updated = false;
     if (toUpdate) {
       const { labels } = params;
-      const labelList: Label[] = []
+      const labelList: Label[] = [];
       for (const value of labels) {
         const labelInstance = new Label();
         labelInstance.label = value;
-        await labelList.push(labelInstance)
+        await labelList.push(labelInstance);
         await this.manager.save(labelInstance);
       }
 
@@ -71,7 +75,7 @@ export class PaperService {
       });
 
       await this.paperRepository.save(toUpdate);
-      updated = true
+      updated = true;
     }
     return { updated };
   }
@@ -112,7 +116,7 @@ export class PaperService {
 
   getPaperList() {
     return this.paperRepository.find({
-      relations: ["labels"],
+      relations: ['labels'],
     });
   }
 
@@ -134,34 +138,35 @@ export class PaperService {
 
   // RELATED: label
   async getLabelsByPaperId(paperId: number) {
-    const result = await this.paperRepository.findOne(
-      {
-        select: ["labels"],
-        where: {
-          id: paperId
-        },
-        relations: ["labels"]
-      }
-    )
+    const result = await this.paperRepository.findOne({
+      select: ['labels'],
+      where: {
+        id: paperId,
+      },
+      relations: ['labels'],
+    });
 
     return result;
   }
 
   async deleteLabel(paperId: number, labelId: number) {
     const paper = await this.paperRepository.findOne({
-      relations: ["labels"],
-      where: { id: paperId }
-    })
+      relations: ['labels'],
+      where: { id: paperId },
+    });
     paper.labels = paper.labels.filter((label: Label) => {
-      return label.id !== labelId
-    })
-    await this.manager.save(paper)
+      return label.id !== labelId;
+    });
+    await this.manager.save(paper);
   }
 
-  async getSearchPaperListPagination(params: { searchValue: string, page: number, pageSize: number }) {
+  async getSearchPaperListPagination(params: {
+    searchValue: string;
+    page: number;
+    pageSize: number;
+  }) {
     const { searchValue, page, pageSize } = params;
     const pagination = await this.paperRepository.findAndCount({
-
       // notice:对象形式为交叉查询
       // where: {
       //   content: Like(`%${searchValue}%`),
@@ -170,6 +175,9 @@ export class PaperService {
 
       // notice:数组形式为联合查询
       where: [
+        {
+          id: +searchValue,
+        },
         {
           title: Like(`%${searchValue}%`),
         },
@@ -182,24 +190,24 @@ export class PaperService {
       ],
       skip: (page - 1) * pageSize,
       take: pageSize,
-      relations: ["labels"],
+      relations: ['labels'],
       order: {
-        id: 'DESC'
-      }
-    })
+        id: 'DESC',
+      },
+    });
 
     let match = false;
     if (pagination) {
-      const [items, total] = pagination
-      match = true
+      const [items, total] = pagination;
+      match = true;
 
       return {
         match,
         items,
-        total
-      }
+        total,
+      };
     }
 
-    return { match }
+    return { match };
   }
 }
