@@ -166,6 +166,16 @@ export class PaperService {
     pageSize: number;
   }) {
     const { searchValue, page, pageSize } = params;
+
+    const where = ['title', 'content', 'description'].map((str) => {
+      return {
+        [str]: Like(`%${searchValue}%`),
+      };
+    });
+
+    // @ts-ignore
+    !isNaN(+searchValue) && where.push({ id: +searchValue });
+
     const pagination = await this.paperRepository.findAndCount({
       // notice:对象形式为交叉查询
       // where: {
@@ -174,20 +184,7 @@ export class PaperService {
       // },
 
       // notice:数组形式为联合查询
-      where: [
-        {
-          id: +searchValue,
-        },
-        {
-          title: Like(`%${searchValue}%`),
-        },
-        {
-          content: Like(`%${searchValue}%`),
-        },
-        {
-          description: Like(`%${searchValue}%`),
-        },
-      ],
+      where,
       skip: (page - 1) * pageSize,
       take: pageSize,
       relations: ['labels'],
