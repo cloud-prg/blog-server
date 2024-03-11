@@ -22,6 +22,9 @@ export class Reply {
   @Column()
   user: string;
 
-  @ManyToOne((type) => Comment, (comment) => comment.reply)
+  @ManyToOne((type) => Comment, (comment) => comment.reply, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   comment: Comment;
 }

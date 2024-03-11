@@ -33,7 +33,9 @@ export class Paper {
   @Column()
   content: string;
 
-  @OneToMany(() => Comment, comment => comment.paper)
+  @OneToMany(() => Comment, comment => comment.paper,{
+    cascade: true,
+  })
   comment: Comment[];
 
   @ManyToMany(()=> Label , label=>label.papers)

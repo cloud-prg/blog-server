@@ -16,9 +16,14 @@ export class Comment {
   @Column()
   user: string;
 
-  @OneToMany((type) => Reply, (reply) => reply.comment)
+  @OneToMany((type) => Reply, (reply) => reply.comment ,{
+    cascade: true,
+  })
   reply: Reply[];
 
-  @ManyToOne((type) => Paper, (paper) => paper.comment)
+  @ManyToOne((type) => Paper, (paper) => paper.comment  , {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
   paper: Paper;
 }
