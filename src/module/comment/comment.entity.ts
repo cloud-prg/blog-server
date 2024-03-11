@@ -18,6 +18,7 @@ export class Comment {
 
   @OneToMany((type) => Reply, (reply) => reply.comment ,{
     cascade: true,
+    onUpdate: 'CASCADE',
   })
   reply: Reply[];
 

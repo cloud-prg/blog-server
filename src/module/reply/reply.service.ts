@@ -9,14 +9,12 @@ import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class ReplyService {
-  private replyRepository: Repository<Reply>
-  private commentRepository: Repository<Comment>
+  private replyRepository: Repository<Reply>;
+  private commentRepository: Repository<Comment>;
 
-  constructor(
-      @InjectEntityManager() manager: EntityManager
-  ) {
-      this.replyRepository = manager.getRepository(Reply);
-      this.commentRepository = manager.getRepository(Comment);
+  constructor(@InjectEntityManager() manager: EntityManager) {
+    this.replyRepository = manager.getRepository(Reply);
+    this.commentRepository = manager.getRepository(Comment);
   }
 
   async create(commentId: string, params: CreateReplyDto) {
@@ -35,6 +33,32 @@ export class ReplyService {
       comment: relatedComment,
     });
 
-    this.replyRepository.save(newReply)
+    this.replyRepository.save(newReply);
+  }
+
+  async createWithoutRedirect(commentId: string, params: CreateReplyDto) {
+    let created = false;
+
+    const relatedComment = await this.commentRepository.findOneBy({
+      id: commentId,
+    });
+
+    if (!relatedComment) {
+      throw Error('Related comment not found!');
+    }
+
+    const { text, user } = params;
+    const newReply = this.replyRepository.create({
+      text,
+      user,
+      comment: relatedComment,
+    });
+
+    await this.replyRepository.save(newReply);
+    created = true;
+    
+    return {
+      created,
+    };
   }
 }

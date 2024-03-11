@@ -7,33 +7,72 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CommentService {
-  private paperRepository: Repository<Paper>
-  private commentRepository: Repository<Comment>
+  private paperRepository: Repository<Paper>;
+  private commentRepository: Repository<Comment>;
 
-  constructor(
-    @InjectEntityManager() manager: EntityManager
-  ) {
+  constructor(@InjectEntityManager() manager: EntityManager) {
     this.paperRepository = manager.getRepository(Paper);
     this.commentRepository = manager.getRepository(Comment);
   }
 
   async create(paperId: number, params: CreateCommentDto) {
-    const relatedPaper = await this.paperRepository.findOneBy({
-      id:paperId
-    });
-    
-    if (!relatedPaper) {
-      throw new Error('Related paper not found');
+    let created: boolean = false;
+
+    try {
+      const relatedPaper = await this.paperRepository.findOneBy({
+        id: paperId,
+      });
+
+      if (!relatedPaper) {
+        throw new Error('Related paper not found');
+      }
+
+      const { text, user } = params;
+      const newComment = this.commentRepository.create({
+        text,
+        user,
+        paper: relatedPaper,
+      });
+
+      await this.commentRepository.save(newComment);
+      created = true;
+
+      return {
+        created,
+      };
+    } catch (err) {
+      throw new Error(err);
     }
+  }
 
-    const { text, user } = params;
-    const newComment = this.commentRepository.create({
-      text,
-      user,
-      paper: relatedPaper,
-    });
+  async createWithoutRedirect(paperId: number, params: CreateCommentDto) {
+    let created: boolean = false;
 
-    this.commentRepository.save(newComment);
+    try {
+      const relatedPaper = await this.paperRepository.findOneBy({
+        id: paperId,
+      });
+
+      if (!relatedPaper) {
+        throw new Error('Related paper not found');
+      }
+
+      const { text, user } = params;
+      const newComment = this.commentRepository.create({
+        text,
+        user,
+        paper: relatedPaper,
+      });
+
+      await this.commentRepository.save(newComment);
+      created = true;
+
+      return {
+        created,
+      };
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   async getAll(paperId: number) {

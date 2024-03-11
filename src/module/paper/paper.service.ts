@@ -66,6 +66,7 @@ export class PaperService {
         deleted,
       };
     } catch (err) {
+      // console.log(`=== err`,err)
       throw Error(err);
     }
   }
@@ -132,7 +133,7 @@ export class PaperService {
 
   getPaperList() {
     return this.paperRepository.find({
-      relations: ['labels'],
+      relations: ['labels','comment','comment.reply'],
     });
   }
 

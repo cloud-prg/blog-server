@@ -7,7 +7,7 @@ import {
   OneToMany,
   ManyToMany,
 } from 'typeorm';
-import { Comment } from '@/module/comment/comment.entity'
+import { Comment } from '@/module/comment/comment.entity';
 import { Label } from '../label/label.entity';
 
 @Entity()
@@ -30,14 +30,15 @@ export class Paper {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
+  @Column({ type: 'mediumtext', nullable: true })
   content: string;
 
-  @OneToMany(() => Comment, comment => comment.paper,{
+  @OneToMany(() => Comment, (comment) => comment.paper, {
     cascade: true,
+    onUpdate: 'CASCADE',
   })
   comment: Comment[];
 
-  @ManyToMany(()=> Label , label=>label.papers)
+  @ManyToMany(() => Label, (label) => label.papers)
   labels: Label[];
 }
