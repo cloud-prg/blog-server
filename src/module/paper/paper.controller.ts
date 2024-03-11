@@ -11,8 +11,6 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { PaperService } from './paper.service';
-import { createParamProps } from '../../type/paper';
-import { TypeORMExceptionFilter } from '../../exception/typeormException';
 import {
   CreatePaperDto,
   getPaperListPaginationDto,
@@ -29,8 +27,8 @@ export class PaperController {
     @Inject(forwardRef(() => PaperService))
     private readonly paperService: PaperService,
     @Inject(forwardRef(() => LabelService))
-    private labelService: LabelService
-  ) { }
+    private labelService: LabelService,
+  ) {}
 
   @Post('create')
   create(@Body(new ValidationPipe()) createPaperDto: CreatePaperDto) {
@@ -38,7 +36,7 @@ export class PaperController {
   }
 
   @Post('update')
-  update(@Body() updatePaperDto: { paperId: number, data: CreatePaperDto }) {
+  update(@Body() updatePaperDto: { paperId: number; data: CreatePaperDto }) {
     const { paperId, data } = updatePaperDto;
 
     return this.paperService.update(paperId, data);
@@ -47,6 +45,11 @@ export class PaperController {
   @Post('delete/:paperId')
   delete(@Param('paperId') paperId: number) {
     return this.paperService.delete(+paperId);
+  }
+
+  @Post('multipleDelete')
+  multipleDelete(@Body('paperIds') paperIds: number[]) {
+    return this.paperService.multipleDelete(paperIds);
   }
 
   @Get('getPaper/:paperId')
@@ -62,7 +65,7 @@ export class PaperController {
   @Post('getPaperListPagination')
   getPaperListPagination(
     @Body(new ValidationPipe())
-    getPaperListPaginationDto: getPaperListPaginationDto
+    getPaperListPaginationDto: getPaperListPaginationDto,
   ) {
     const { page, pageSize } = getPaperListPaginationDto;
     return this.paperService.getPaperListPagination(page, pageSize);
@@ -71,34 +74,33 @@ export class PaperController {
   @Post('getPaperListPaginationByLabel')
   getPaperListPaginationByLabel(
     @Body()
-    params: getPaperListPaginationByLabelDto
+    params: getPaperListPaginationByLabelDto,
   ) {
     const { page, pageSize, label } = params;
     return this.labelService.getPaperListPaginationByLabel({
-      page, pageSize, label
+      page,
+      pageSize,
+      label,
     });
   }
 
-
   @Post('getLabelsByPaperId/:id')
   getLabelsByPaperId(@Param('paperId') paperId: number) {
-    return this.paperService.getLabelsByPaperId(+paperId)
+    return this.paperService.getLabelsByPaperId(+paperId);
   }
 
   @Post('deleteLabel/:paperId/:labelId')
   deleteLabel(
     @Param('paperId') paperId: number,
-    @Param('labelId') labelId: number
+    @Param('labelId') labelId: number,
   ) {
-    return this.paperService.deleteLabel(paperId, labelId)
+    return this.paperService.deleteLabel(paperId, labelId);
   }
 
   @Post('getSearchPaperListPagination')
-  getSearchPaperListPagination(@Body() params: {
-    searchValue: string,
-    page: number,
-    pageSize: number,
-  }) {
-    return this.paperService.getSearchPaperListPagination(params)
+  getSearchPaperListPagination(
+    @Body() params: { searchValue: string; page: number; pageSize: number },
+  ) {
+    return this.paperService.getSearchPaperListPagination(params);
   }
 }

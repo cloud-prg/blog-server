@@ -54,6 +54,22 @@ export class PaperService {
     return { deleted };
   }
 
+  async multipleDelete(paperIds: number[]) {
+    let deleted = false;
+    if (!paperIds.length) {
+      return { deleted, msg: '数组不能为空' };
+    }
+    try {
+      await this.paperRepository.delete(paperIds);
+      deleted = true;
+      return {
+        deleted,
+      };
+    } catch (err) {
+      throw Error(err);
+    }
+  }
+
   async update(paperId: number, params: createParamProps) {
     let toUpdate = await this.paperRepository.findOneBy({
       id: paperId,
