@@ -17,7 +17,7 @@ export class ReplyService {
     this.commentRepository = manager.getRepository(Comment);
   }
 
-  async create(commentId: string, params: CreateReplyDto) {
+  async create(commentId: number, params: CreateReplyDto) {
     const relatedComment = await this.commentRepository.findOneBy({
       id: commentId,
     });
@@ -36,7 +36,7 @@ export class ReplyService {
     this.replyRepository.save(newReply);
   }
 
-  async createWithoutRedirect(commentId: string, params: CreateReplyDto) {
+  async createWithoutRedirect(commentId: number, params: CreateReplyDto) {
     let created = false;
 
     const relatedComment = await this.commentRepository.findOneBy({

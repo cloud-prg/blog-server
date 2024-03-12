@@ -15,7 +15,7 @@ export class ReplyController {
 
   @Post('/create/:paperId/:commentId')
   async create(
-    @Param('commentId') commentId: string,
+    @Param('commentId') commentId: number,
     @Param('paperId') paperId: string,
     @Body() createReplyDto: CreateReplyDto,
     @Response() res,
@@ -30,7 +30,7 @@ export class ReplyController {
 
   @Post('/createWithoutRedirect/:commentId')
   async createWithoutRedirect(
-    @Param('commentId') commentId: string,
+    @Param('commentId') commentId: number,
     @Body() createReplyDto: CreateReplyDto,
   ) {
     return this.ReplyService.createWithoutRedirect(commentId, createReplyDto);

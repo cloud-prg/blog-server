@@ -100,7 +100,7 @@ export class PaperService {
   async getPaper(paperId: number) {
     const current = await this.paperRepository.findOneOrFail({
       where: { id: paperId },
-      relations: ['labels', 'comment'],
+      relations: ['labels', 'comment', 'comment.reply'],
     });
     const { createdAt: currentPaperCreatedAt } = current;
 
@@ -133,7 +133,7 @@ export class PaperService {
 
   getPaperList() {
     return this.paperRepository.find({
-      relations: ['labels','comment','comment.reply'],
+      relations: ['labels', 'comment', 'comment.reply'],
     });
   }
 
@@ -144,7 +144,7 @@ export class PaperService {
       order: {
         id: 'DESC',
       },
-      relations: ['labels'],
+      relations: ['labels', 'comment', 'comment.reply'],
     });
 
     return {
@@ -160,7 +160,7 @@ export class PaperService {
       where: {
         id: paperId,
       },
-      relations: ['labels'],
+      relations: ['labels', 'comment', 'comment.reply'],
     });
 
     return result;
@@ -204,7 +204,7 @@ export class PaperService {
       where,
       skip: (page - 1) * pageSize,
       take: pageSize,
-      relations: ['labels'],
+      relations: ['labels', 'comment', 'comment.reply'],
       order: {
         id: 'DESC',
       },

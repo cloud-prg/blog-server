@@ -83,4 +83,26 @@ export class CommentService {
 
     return relatedComment;
   }
+
+  async delete(commentId: number) {
+    let matched: boolean = false;
+    let removed: boolean = false;
+    const comment = await this.commentRepository.findOneBy({
+      id: commentId
+    })
+    if (!comment) {
+      return {
+        matched
+      }
+    }
+    try {
+      await this.commentRepository.remove(comment)
+      removed = true;
+      return {
+        removed
+      }
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
 }

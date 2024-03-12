@@ -48,10 +48,13 @@ export class CommentController {
     return this.commentService.createWithoutRedirect(+paperId, createCommentDto);
   }
 
-
-
   @Get('getAll/:paperId')
   async getAll(@Param('paperId') paperId: number) {
     return this.commentService.getAll(+paperId);
+  }
+
+  @Post('delete/:commentId')
+  async delete(@Param('commentId') commentId: number) {
+    return this.commentService.delete(+commentId);
   }
 }

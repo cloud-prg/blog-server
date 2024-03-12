@@ -5,7 +5,7 @@ import { Paper } from '@/module/paper/paper.entity';
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @CreateDateColumn()
   createdAt: Date;
