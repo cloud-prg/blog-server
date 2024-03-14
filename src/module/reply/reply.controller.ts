@@ -35,4 +35,9 @@ export class ReplyController {
   ) {
     return this.ReplyService.createWithoutRedirect(commentId, createReplyDto);
   }
+
+  @Post('delete/:replyId')
+  async delete(@Param('replyId') replyId: number) {
+    return this.ReplyService.delete(+replyId);
+  }
 }
