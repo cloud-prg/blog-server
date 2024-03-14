@@ -10,7 +10,7 @@ import { Comment } from '@/module/comment/comment.entity';
 @Entity()
 export class Reply {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @CreateDateColumn()
   createdAt: Date;
