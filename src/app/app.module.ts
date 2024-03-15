@@ -4,19 +4,19 @@ import { AppService } from './app.service';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration, { databaseProp } from '../config/configuration';
 
 import { Paper, PaperModule } from '../module/paper';
 import { Reply, ReplyModule } from '../module/reply';
 import { Comment, CommentModule } from '../module/comment/';
 import { LabelModule } from '@/module/label/label.module';
 import { Label } from '@/module/label/label.entity';
+import yamlConfig from 'src/config/yamlConfig';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration],
+      load: [yamlConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [
@@ -27,7 +27,8 @@ import { Label } from '@/module/label/label.entity';
         LabelModule
       ],
       useFactory: (configService: ConfigService) => {
-        const databaseConfig: databaseProp = configService.get('database');
+        const env = configService.get('env');
+        const { database: databaseConfig } = configService.get(env);
         return {
           type: 'mysql',
           ...databaseConfig,
@@ -37,9 +38,6 @@ import { Label } from '@/module/label/label.entity';
           //   Reply,
           //   Label
           // ],
-          autoLoadEntities: true,
-          synchronize: true,
-          // logging: true,
         };
       },
       inject: [ConfigService],
