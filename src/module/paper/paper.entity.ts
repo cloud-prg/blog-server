@@ -39,6 +39,8 @@ export class Paper {
   })
   comment: Comment[];
 
-  @ManyToMany(() => Label, (label) => label.papers)
+  @ManyToMany(() => Label, (label) => label.papers,{
+    onDelete: 'CASCADE'
+  })
   labels: Label[];
 }

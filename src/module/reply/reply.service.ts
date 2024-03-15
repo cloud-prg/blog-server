@@ -61,4 +61,26 @@ export class ReplyService {
       created,
     };
   }
+
+  async delete(replyId: number) {
+    let matched: boolean = false;
+    let removed: boolean = false;
+    const reply = await this.replyRepository.findOneBy({
+      id: replyId
+    })
+    if (!reply) {
+      return {
+        matched
+      }
+    }
+    try {
+      await this.replyRepository.remove(reply)
+      removed = true;
+      return {
+        removed
+      }
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
 }
