@@ -1,0 +1,32 @@
+version: "2"
+services:
+  admin:
+    container_name: "blog-server"
+    image: "bs:v0.0.1"
+    # build:
+    #   context: ./
+    #   dockerfile: ./Dockerfile
+    depends_on:
+      - mysql1
+    restart: on-failure
+    ports: 
+    - "3002:3002"
+  mysql1:
+    image: mysql
+    container_name: "blog_mysql"
+    environment:
+      MYSQL_USERNAME: "root"
+      MYSQL_DATABASE: "blog"
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_PASSWORD: "123456"
+    volumes:
+      - /mysql_test:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - backend_network
+    restart: unless-stopped
+
+networks:
+  backend_network:
+    driver: bridge
