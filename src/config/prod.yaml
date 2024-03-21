@@ -1,11 +1,7 @@
 database:
-  # host: 'localhost'
-  # host: 'mysql1'
+  host: 'mysql1'
+  port: 3306
 
-  # server ip: 172.20.0.2
-  # mysql ip: 172.19.0.2
-  host: '172.20.0.2' 
-  port: 3307
   username: 'root'
   password: '123456'
   database: 'blog'
