@@ -8,3 +8,14 @@ database:
   synchronize: true
   logging: true
 env: 'dev'
+
+# database:
+#   host: '172.19.0.2'
+#   port: 3306
+#   username: 'root'
+#   password: '123456'
+#   database: 'blog'
+#   autoLoadEntities: true
+#   synchronize: true
+#   logging: true
+# env: 'prod'

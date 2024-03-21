@@ -1,16 +1,18 @@
 version: "2"
 services:
-  admin:
+  server:
     container_name: "blog-server"
     image: "bs:v0.0.1"
     # build:
     #   context: ./
     #   dockerfile: ./Dockerfile
+    restart: always
+    ports: 
+    - "3003:3002"
     depends_on:
       - mysql1
-    restart: on-failure
-    ports: 
-    - "3002:3002"
+    networks:
+      - backend_network
   mysql1:
     image: mysql
     container_name: "blog_mysql"

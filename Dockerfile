@@ -4,8 +4,8 @@ FROM node:20-alpine as build-stage
 # ENV TZ=Asia/Shanghai \
 #   DEBIAN_FRONTEND=noninteractive
 
-# RUN npm config set registry https://registry.npmmirror.com
-# RUN npm install -g npm@latest
+RUN npm config set registry https://registry.npmmirror.com
+RUN npm install -g npm@latest
 
 WORKDIR /usr/app
 
